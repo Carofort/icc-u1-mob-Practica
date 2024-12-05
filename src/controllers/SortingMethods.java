@@ -4,16 +4,42 @@ import models.Person;
 
 public class SortingMethods {
 
-    public void sortByeNameWithBubble(Person[] personas) {
-        //AGREGAR MÉTODO BURBUJA
-        int n = personas.length;
-        for(int i = 0; i < n; i++){
+    public void sortByNameWithBubble(Person[] persons) {
+        for (int i = 0; i < persons.length - 1; i++) {
+            for (int j = 0; j < persons.length - i - 1; j++) {
+                if (persons[j].getName().compareTo(persons[j + 1].getName()) > 0) {
+                    Person temp = persons[j];
+                    persons[j] = persons[j + 1];
+                    persons[j + 1] = temp;
+                }
+            }
         }
     }
 
-    public void sortByAgeWithSelection(Person[] personas) {
-        //AGREGAR MÉTODO DE SELECCIÓN
-        throw new UnsupportedOperationException("Unimplemented method 'sortByAgeWithSelection'");
+    public void sortByNameWithSelectionDes(Person[] persons) {
+        for (int i = 0; i < persons.length - 1; i++) {
+            int maxIndex = i;
+            for (int j = i + 1; j < persons.length; j++) {
+                if (persons[j].getName().compareTo(persons[maxIndex].getName()) > 0) {
+                    maxIndex = j;
+                }
+            }
+            Person temp = persons[maxIndex];
+            persons[maxIndex] = persons[i];
+            persons[i] = temp;
+        }
+    }
+
+    public void sortByAgeWithInsertion(Person[] persons) {
+        for (int i = 1; i < persons.length; i++) {
+            Person key = persons[i];
+            int j = i - 1;
+            while (j >= 0 && persons[j].getAge() > key.getAge()) {
+                persons[j + 1] = persons[j];
+                j--;
+            }
+            persons[j + 1] = key;
+        }
     }
     
 }

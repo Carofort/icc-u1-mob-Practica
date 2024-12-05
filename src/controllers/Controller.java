@@ -6,17 +6,17 @@ import models.Person;
 
 public class Controller {
     private View view;
+    private Person[] persons;
     private SortingMethods sortingMethods;
     private SearchMethods searchMethods;
 
-    private Person[] personas;
     public Controller(View view, 
                         SortingMethods sortingMethods,
                         SearchMethods searchmethods){
         this.view = view;
         this.searchMethods = searchmethods;
         this.sortingMethods = sortingMethods;
-        System.out.println("Controller created");             
+        this.persons = new Person[0];           
     }                        
 
     public void start(){
@@ -25,13 +25,13 @@ public class Controller {
             option = view.showMenu();
             switch(option){
                 case 1:
-                    inputPersons();
+                    addPersons();
                     break;
                 case 2:
-                    addPerson();
+                    sortPersons();
                     break;    
                 case 3:
-                    sortPersons();
+                    searchPerson();
                     break;     
                 case 100:
                    System.out.println("Adiós");
@@ -44,43 +44,42 @@ public class Controller {
         
     }
 
-    private void sortPersons() {
-        int sortingOption = view.selectSortingMethod();
-
-        if(sortingOption == 1){
-            sortingMethods.sortByeNameWithBubble(personas);
-        } else if(sortingOption == 2){
-            sortingMethods.sortByAgeWithSelection(personas);
-
-        }else{
-            view.showMessage("Opción inválida.");
-        }    
+    public void sortPersons() {
+        int method = view.selectSortingMethod();
+        switch (method) {
+            case 1:
+                sortingMethods.sortByNameWithBubble(persons);
+                break;
+            case 2:
+                sortingMethods.sortByNameWithSelectionDes(persons);
+                break;
+            case 3:
+                sortingMethods.sortByAgeWithInsertion(persons);
+                break;
+        }
+        view.displayPersons(persons);
     }
 
-    public void inputPersons(){
-        int numeroPersonas = view.inputInt("Ingrese el número de Personas: ");
-        personas = new Person[numeroPersonas];
-        for(int i = 0; i < numeroPersonas; i++){
-            personas[i] = view.inputPerson();
+    public void searchPerson() {
+        int criterion = view.selectSearchCriterion();
+        Person result = null;
+        if (criterion == 1) {
+            String name = view.inputName();
+            result = searchMethods.binarySearchByName(persons, name);
+        } else if (criterion == 2) {
+            int age = view.inputAge();
+            result = searchMethods.binarySearchByAge(persons, age);
         }
+        view.displaySearchResult(result);
     }
 
-    public void addPerson(){
-        if(personas == null){
-            view.showMessage("No existe, ingrese las personas por primera vez");
-            inputPersons();
-        } else{
-            int numeroPersonas = view.inputInt("Ingrese el número de Personas a adicionar: ");
-            Person[] personasTotales = new Person[personas.length + numeroPersonas];
-            for(int i = 0; i < personas.length; i++){
-                personasTotales[i] = personas[i];
-            }     
-            for(int i = personas.length; i < personasTotales.length; i++){
-                personas[i] = view.inputPerson();
-            }     
-
-            personas = personasTotales;
+    public void addPersons() {
+        System.out.println("¿Cuantas personas desea agregar?");
+        int count = view.inputCount(); 
+        persons = new Person[count];
+        for (int i = 0; i < count; i++) {
+            persons[i] = view.inputPerson();
         }
-    } 
+    }    
 }
 

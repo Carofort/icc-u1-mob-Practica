@@ -15,5 +15,6 @@ public class App {
        Controller controller = new Controller(view, sortingMethods, searchMethods);
        
        //INICIAR APLICACIÓN
+       controller.start();
     }
 }
